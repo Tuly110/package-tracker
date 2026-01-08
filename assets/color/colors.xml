@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="primary">#FF5722</color>
+    <color name="material_primary" type="material">#FF5722</color>
+    <color name="background">#FFEDE5</color>
+    <color name="blue">#FF2196F3</color>
+    <color name="brandBlue">#5F77F5</color>
+    <color name="brandAccent">#EA8A27</color>
+    <color name="lightGray">#C1C1C1</color>
+    <color name="cyan">#00adc1</color>
+    <color name="light_cyan">#A0CED9</color>
+    <color name="off_white">#FEFEFE</color>
+    <color name="text_secondary">#969696</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="inkWell">#00000000</color>
+    <color name="yellow">#ffbe0b</color>
+    <color name="input">#1AFFFFFF</color>
+    <color name="button">#2A78FE</color>
+    <color name="text_button">#A3C6F0</color>
+    <color name="gray">#808080</color>
+    <color name="red">#FF0000</color>
+    <color name="sky">#FFE3F2FD</color>
+     
+</resources> 
