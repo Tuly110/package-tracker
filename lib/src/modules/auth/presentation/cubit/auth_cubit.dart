@@ -48,14 +48,13 @@ class AuthCubit extends Cubit<AuthState> {
         _resetPasswordUseCase = resetPasswordUseCase,
         _updateUserUsecase = updateUserUsecase,
         super(const AuthState.loading()) {
-    _authSubscription = firebaseAuth.authStateChanges().listen((user) {
-      if (user != null) {
-        emit(AuthState.authenticated(user.uid));
-      } else {
-        emit(const AuthState.unauthenticated());
-      }
-    });
-  }
+          _authSubscription = firebaseAuth.authStateChanges().listen((user) {
+            if (user != null) {
+              getUserInfo(); 
+            }
+          });
+          Future.microtask(() => getUserInfo());
+        }
 
   bool validateEmail(String email) {
     final emailRegex =
@@ -155,28 +154,7 @@ class AuthCubit extends Cubit<AuthState> {
       (user) async {
         emit(AuthState.authenticated(user.id));
         emit(AuthState.userInfoLoaded(user));
-        // // get device token
-        // final tokenDevice = await FirebaseMessaging.instance.getToken();
-        // // send to server
-        // if (tokenDevice != null) {
-        //   final updateRessult = await _updateUserUsecase(
-        //     user.id,
-        //     tokenDevice,
-        //     user.username,
-        //     user.email,
-        //   );
-        //   updateRessult.fold(
-        //     (failure) {
-        //       showToastWidget(
-        //         ToastWidget(
-        //           title: 'Update token failed',
-        //           description: failure.message,
-        //         ),
-        //       );
-        //     },
-        //     (_) => print('Device token updated successfully'),
-        //   );
-        // }
+        
       },
     );
   }
@@ -309,18 +287,19 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> getUserInfo() async {
     if( isClosed) return;
-    emit(AuthState.loading());
+  
     try {
       final result = await _getUserInfoUseCase.call();
       if( isClosed) return;
 
       result.fold(
-        (failure) => emit(AuthState.failure(failure.message)),
+        (failure) => emit(const AuthState.unauthenticated()),
         (user) => emit(AuthState.userInfoLoaded(user)),
       );
     } catch (e) {
       if (isClosed) return;
-      emit(AuthState.failure(e.toString()));
+      emit(const AuthState.unauthenticated());
+      // emit(AuthState.failure(e.toString()));
     }
   }
 

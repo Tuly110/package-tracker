@@ -86,6 +86,7 @@ class TrackingRemoteDatasourceImpl implements TrackingRemoteDatasource {
                 status: e["status"] ?? 
                         e["tracking_info"]?["track_info"]?["latest_status"]?["status"] ?? 
                         'Pending',
+                tracking_info: e["tracking_info"],
               ))
           .toList();
     } else {

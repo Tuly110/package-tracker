@@ -107,8 +107,8 @@ Future<void> main() async {
     runApp(
       MultiBlocProvider(
         providers: [  
-          BlocProvider.value(value: getIt<AuthCubit>()),
-          BlocProvider.value(value: getIt<TrackingCubit>()),
+          BlocProvider(create: (context) => getIt<AuthCubit>()),
+          BlocProvider(create: (context) => getIt<TrackingCubit>()),
           BlocProvider(create: (_) => getIt<CarrierCubit>()..getCarriers()),
           BlocProvider(
               create: (_) => getIt<NotifyCubit>()..loadNotifications()),

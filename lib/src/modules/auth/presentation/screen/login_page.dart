@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:my_tracker_app/src/common/utils/getit_utils.dart';
 import 'package:my_tracker_app/src/modules/auth/presentation/component/social_widget.dart';
 import 'package:my_tracker_app/src/modules/auth/presentation/cubit/auth_cubit.dart';
 
@@ -39,8 +38,12 @@ class _LoginPage extends State<LoginPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      try {
+        if (_scrollController.hasClients && _scrollController.position.hasContentDimensions) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
+      } catch (e) {
+        debugPrint("Scroll error during logout/login: $e");
       }
     });
   }
@@ -148,223 +151,222 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<AuthCubit>(),
-      child: Scaffold(
-          // CHỈNH SỬA MÀU: Đổi từ ColorName.black sang ColorName.white
-          backgroundColor: ColorName.white,
-          body: BlocConsumer<AuthCubit, AuthState>(
-            listener: (context, state) {
-              state.whenOrNull(
-                authenticated: (userId) {
-                  // Gọi getUserInfo mà không truyền userId
-                  context.read<AuthCubit>().getUserInfo();
-                },
-                userInfoLoaded: (user) {
-                  // Navigate khi có user info
-                  context.router.replaceAll([const MainRoute()]);
-                },
-                failure: (message) {
-                  print("Login failed: $message");
-                },
-              );
+    return Scaffold(
+      backgroundColor: ColorName.white,
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            authenticated: (userId) {
+              context.read<AuthCubit>().getUserInfo();
             },
-            builder: (context, state) {
-              return Stack(children: [
-                SingleChildScrollView(
-                  // GÁN ScrollController VÀO SingleChildScrollView
-                  controller: _scrollController,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 1. HEADER IMAGE
-                          SizedBox(
-                            width: double.infinity,
-                            child: Center(
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Assets.authImages.auth.image(
-                                  fit: BoxFit.cover,
-                                  height: 220.h,
+            userInfoLoaded: (user) {
+              // just navigator to main route after login success
+              if (context.router.current.name != MainRoute.name) {
+                context.router.replaceAll([const MainRoute()]);
+              }
+            },
+            failure: (message) {
+              print("Login failed: $message");
+            },
+          );
+        },
+        builder: (context, state) {
+          return Stack(children: [
+            SingleChildScrollView(
+              // GÁN ScrollController VÀO SingleChildScrollView
+              controller: _scrollController,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 1. HEADER IMAGE
+                      SizedBox(
+                        width: double.infinity,
+                        child: Center(
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Assets.authImages.auth.image(
+                              fit: BoxFit.cover,
+                              height: 220.h,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // 2. TEXT: Login
+                      Center(
+                        child: Text(
+                          'Login',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                  // CHỈNH SỬA MÀU: Đổi từ ColorName.white sang ColorName.black
+                                  color: ColorName.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30.sp),
+                        ),
+                      ),
+                      // 3. TEXT: Access account
+                      Center(
+                        child: Text(
+                          'Access account',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                  // CHỈNH SỬA MÀU: Đổi từ ColorName.white sang Colors.grey.shade700
+                                  color: Colors.grey.shade700,
+                                  fontSize: 16.sp),
+                        ),
+                      ),
+                      // 4. MAIN CONTENT
+                      Expanded(
+                        child: SingleChildScrollView(
+                            // Note: Nên dùng Column/Padding trực tiếp trong SingleChildScrollView chính
+                            // thay vì SingleChildScrollView lồng (như trong code gốc) để tránh
+                            // các vấn đề về cuộn. Tôi đã xóa SingleChildScrollView lồng.
+                            child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.w),
+                          child: Form(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            // căn giữa theo chiều ngang
+                            children: [
+                              Gap(20.h), // Thêm khoảng cách sau tiêu đề
+                              // 5. INPUT FIELDS
+                              TextFieldWidget(
+                                isSignUp: false,
+                                usernameController: _usernameController,
+                                passwordController: _passwordController,
+                                usernameError: state.mapOrNull(
+                                  unauthenticated: (s) => s.usernameError,
                                 ),
+                                passwordError: state.mapOrNull(
+                                    unauthenticated: (s) =>
+                                        s.passwordError),
                               ),
-                            ),
-                          ),
-                          // 2. TEXT: Login
-                          Center(
-                            child: Text(
-                              'Login',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                      // CHỈNH SỬA MÀU: Đổi từ ColorName.white sang ColorName.black
-                                      color: ColorName.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 30.sp),
-                            ),
-                          ),
-                          // 3. TEXT: Access account
-                          Center(
-                            child: Text(
-                              'Access account',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                      // CHỈNH SỬA MÀU: Đổi từ ColorName.white sang Colors.grey.shade700
-                                      color: Colors.grey.shade700,
-                                      fontSize: 16.sp),
-                            ),
-                          ),
-                          // 4. MAIN CONTENT
-                          Expanded(
-                            child: SingleChildScrollView(
-                                // Note: Nên dùng Column/Padding trực tiếp trong SingleChildScrollView chính
-                                // thay vì SingleChildScrollView lồng (như trong code gốc) để tránh
-                                // các vấn đề về cuộn. Tôi đã xóa SingleChildScrollView lồng.
-                                child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15.w),
-                              child: Form(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                // căn giữa theo chiều ngang
-                                children: [
-                                  Gap(20.h), // Thêm khoảng cách sau tiêu đề
-                                  // 5. INPUT FIELDS
-                                  TextFieldWidget(
-                                    isSignUp: false,
-                                    usernameController: _usernameController,
-                                    passwordController: _passwordController,
-                                    usernameError: state.mapOrNull(
-                                      unauthenticated: (s) => s.usernameError,
+                              // 6. FORGOT PASSWORD LINK
+                              Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 10.h),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _showForgotPasswordSheet(context);
+                                      },
+                                      child: Text(
+                                        'Forgot password?',
+                                        style: TextStyle(
+                                            fontSize: 14.sp,
+                                            // CHỈNH SỬA MÀU: Đổi từ ColorName.white sang Colors.grey.shade700
+                                            color: Colors.grey.shade700),
+                                      ),
                                     ),
-                                    passwordError: state.mapOrNull(
-                                        unauthenticated: (s) =>
-                                            s.passwordError),
-                                  ),
-                                  // 6. FORGOT PASSWORD LINK
-                                  Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.w, vertical: 10.h),
-                                      child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            _showForgotPasswordSheet(context);
-                                          },
-                                          child: Text(
-                                            'Forgot password?',
-                                            style: TextStyle(
-                                                fontSize: 14.sp,
-                                                // CHỈNH SỬA MÀU: Đổi từ ColorName.white sang Colors.grey.shade700
-                                                color: Colors.grey.shade700),
-                                          ),
+                                  )),
+                              // 7. LOGIN BUTTON
+                              Padding(
+                                  padding: EdgeInsets.only(top: 0),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: TextButton(
+                                      onPressed: () {
+                                        context.read<AuthCubit>().signIn(
+                                            username:
+                                                _usernameController.text,
+                                            password:
+                                                _passwordController.text,
+                                            methodLogin: methodLogin);
+                                      },
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                            color: ColorName.white,
+                                            fontSize: 15.sp),
+                                      ),
+                                      style: TextButton.styleFrom(
+                                        backgroundColor:
+                                            ColorName.brandBlue,
+                                        minimumSize: Size(100.w, 50.h),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(6),
                                         ),
-                                      )),
-                                  // 7. LOGIN BUTTON
-                                  Padding(
-                                      padding: EdgeInsets.only(top: 0),
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            context.read<AuthCubit>().signIn(
-                                                username:
-                                                    _usernameController.text,
-                                                password:
-                                                    _passwordController.text,
-                                                methodLogin: methodLogin);
-                                          },
-                                          child: Text(
-                                            'Login',
-                                            style: TextStyle(
-                                                color: ColorName.white,
-                                                fontSize: 15.sp),
-                                          ),
-                                          style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                ColorName.brandBlue,
-                                            minimumSize: Size(100.w, 50.h),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                            ),
-                                          ),
-                                        ),
-                                      )),
-                                  // 8. REGISTER LINK
-                                  Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.w, vertical: 7.h),
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: RichText(
-                                          text: TextSpan(
-                                              text: "Don't have an account? ",
+                                      ),
+                                    ),
+                                  )),
+                              // 8. REGISTER LINK
+                              Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 7.h),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: RichText(
+                                      text: TextSpan(
+                                          text: "Don't have an account? ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall
+                                              ?.copyWith(
+                                                  fontSize: 16.sp,
+                                                  // CHỈNH SỬA MÀU: Đổi từ Colors.white sang ColorName.black
+                                                  color: ColorName.black),
+                                          children: [
+                                            TextSpan(
+                                              text: "Register",
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleSmall
                                                   ?.copyWith(
                                                       fontSize: 16.sp,
-                                                      // CHỈNH SỬA MÀU: Đổi từ Colors.white sang ColorName.black
-                                                      color: ColorName.black),
-                                              children: [
-                                                TextSpan(
-                                                  text: "Register",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall
-                                                      ?.copyWith(
-                                                          fontSize: 16.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          // Giữ màu brandBlue
-                                                          color: ColorName
-                                                              .brandBlue),
-                                                  recognizer:
-                                                      TapGestureRecognizer()
-                                                        ..onTap = () {
-                                                          context.pushRoute(
-                                                              const SignupRoute());
-                                                        },
-                                                ),
-                                              ]),
-                                        ),
-                                      )),
-                                  // 9. OR DIVIDER
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "or",
-                                      style: TextStyle(
-                                          // CHỈNH SỬA MÀU: Đổi từ ColorName.white sang ColorName.black
-                                          color: ColorName.black,
-                                          fontSize: 14.sp),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      // Giữ màu brandBlue
+                                                      color: ColorName
+                                                          .brandBlue),
+                                              recognizer:
+                                                  TapGestureRecognizer()
+                                                    ..onTap = () {
+                                                      context.pushRoute(
+                                                          const SignupRoute());
+                                                    },
+                                            ),
+                                          ]),
                                     ),
-                                  ),
-                                  Gap(10.h),
-                                  // 10. SOCIAL WIDGET
-                                  const SocialWidget(),
-                                  Gap(20.h), // Thêm khoảng cách cuối cùng
-                                ],
-                              )),
-                            )),
-                          )
-                        ],
-                      ),
-                    ),
+                                  )),
+                              // 9. OR DIVIDER
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "or",
+                                  style: TextStyle(
+                                      // CHỈNH SỬA MÀU: Đổi từ ColorName.white sang ColorName.black
+                                      color: ColorName.black,
+                                      fontSize: 14.sp),
+                                ),
+                              ),
+                              Gap(10.h),
+                              // 10. SOCIAL WIDGET
+                              const SocialWidget(),
+                              Gap(20.h), // Thêm khoảng cách cuối cùng
+                            ],
+                          )),
+                        )),
+                      )
+                    ],
                   ),
                 ),
-                if (state == const AuthState.loading()) const LoadingWidget()
-              ]);
-            },
-          )),
+              ),
+            ),
+            if (state == const AuthState.loading() && _usernameController.text.isNotEmpty) 
+              const LoadingWidget()
+          ]);
+        },
+      )
     );
   }
 }
