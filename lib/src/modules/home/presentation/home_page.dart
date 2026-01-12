@@ -35,10 +35,13 @@ class _HomePageState extends State<HomePage> {
       context.read<TrackingCubit>().getTrackingList();
       final authState = context.read<AuthCubit>().state;
 
-      if (!authState.maybeWhen(
-          userInfoLoaded: (_) => true, orElse: () => false)) {
-        context.read<AuthCubit>().getUserInfo();
-      }
+      authState.maybeWhen(
+        userInfoLoaded: (_) {
+        },
+        orElse: () {
+          context.read<AuthCubit>().getUserInfo();
+        },
+      );
     });
   }
 
@@ -289,8 +292,12 @@ class _HomePageState extends State<HomePage> {
                                 lastestTracking: lastestTracking,
                                 onTap: (){
                                   if (lastestTracking != null) {
+                                    final Map<String, dynamic> rawData = {
+                                      ...lastestTracking!.toJson(),
+                                      'tracking_info': lastestTracking!.tracking_info, // Ép dữ liệu vào đây
+                                    };
                                     final detailEntity = TrackingDetailEntity(
-                                      rawData: lastestTracking!.toJson(), 
+                                      rawData: rawData,
                                     );
                                     context.router.push(
                                       TrackingDetailRoute(detail: detailEntity),

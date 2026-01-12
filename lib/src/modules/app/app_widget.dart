@@ -1,5 +1,4 @@
 import 'package:asuka/asuka.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,21 +35,30 @@ class AppWidget extends StatelessWidget {
               child: BlocListener<AuthCubit, AuthState>(
                 listener: (context, state) async {
                   final prefs = await SharedPreferences.getInstance();
-                  final bool onboardingCompleted =
-                      prefs.getBool('onboarding_completed') ?? false;
-                  state.whenOrNull(
+                  final bool onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
+
+                  state.maybeWhen(
+                    // 1. authenticated: CHỈ gọi load dữ liệu, KHÔNG chuyển trang ở đây
                     authenticated: (userId) {
                       context.read<AuthCubit>().getUserInfo();
-                      getIt<AppRouter>().replaceAll([const MainRoute()]);
                     },
-                    unauthenticated: (emailError, usernameError, passwordError,
-                        errorMessage) {
-                      if (onboardingCompleted) {
-                        getIt<AppRouter>().replaceAll([const LoginRoute()]);
-                      } else {
-                        getIt<AppRouter>().replaceAll([const SplashRoute()]);
+                    
+                    // 2. userInfoLoaded: ĐÂY mới là lúc an toàn để vào Home
+                    userInfoLoaded: (user) {
+                      if (router.current.name != MainRoute.name) {
+                        router.replaceAll([const MainRoute()]);
                       }
                     },
+
+                    // 3. unauthenticated: Ra Login
+                    unauthenticated: (emailError, usernameError, passwordError, errorMessage) {
+                      if (onboardingCompleted) {
+                        router.replaceAll([const LoginRoute()]);
+                      } else {
+                        router.replaceAll([const SplashRoute()]);
+                      }
+                    },
+                    orElse: () {},
                   );
                 },
                 child: MaterialApp.router(

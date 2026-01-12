@@ -59,6 +59,7 @@ class CurrentShipment extends StatelessWidget {
             ],
           ),
           InkWell(
+            onTap: onTap,
             child: Card(
               margin: EdgeInsets.symmetric(vertical: 8.h),
               shape: RoundedRectangleBorder(
