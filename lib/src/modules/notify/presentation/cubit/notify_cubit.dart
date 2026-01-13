@@ -12,6 +12,16 @@ class NotifyCubit extends Cubit<NotifyState> {
   final UpdateNotifyUsecase updateNotification;
   final DeleteNotifyUsecase deleteNotification;
 
+  int get unreadCount {
+    final currentState = state;
+    if(currentState is NotifyLoaded){
+      return currentState.messages
+          .where((m) => m.status == 'new'|| m.status == null)
+          .length;
+    }
+    return 0;
+  }
+
   NotifyCubit({
     required this.getNotifications,
     required this.updateNotification,

@@ -41,60 +41,51 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey:
-        'AIzaSyC_4MRySHztMVZCik4Oxh9ZD-nWIBgrgqA', // Cập nhật dựa trên cấu hình Firebase
-    appId:
-        '1:912090799696:web:71b1eeb9720a51af8fbb55', // Cập nhật dựa trên cấu hình Firebase
-    messagingSenderId: '912090799696',
-    projectId: 'mytracker-bde38',
-    authDomain: 'mytracker-bde38.firebaseapp.com',
-    storageBucket: 'mytracker-bde38.firebasestorage.app',
-    measurementId: 'G-LP28H0EYMN', // Cập nhật dựa trên cấu hình Firebase
+    apiKey: 'AIzaSyAdiuMHZFG4svnOZYMShHZBY4YdX8d7oQs',
+    appId: '1:655120265431:web:615a3bba0c11f8f1b40092',
+    messagingSenderId: '655120265431',
+    projectId: 'package-tracker-84222',
+    authDomain: 'package-tracker-84222.firebaseapp.com',
+    storageBucket: 'package-tracker-84222.firebasestorage.app',
+    measurementId: 'G-F7CBLDQ0GZ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAj6blsfvr8WlRUc02anR4uM5YKGYv0GRg',
-    appId: '1:912090799696:android:631bee804f495a8e8fbb55',
-    messagingSenderId: '912090799696',
-    projectId: 'mytracker-bde38',
-    storageBucket: 'mytracker-bde38.firebasestorage.app',
+    apiKey: 'AIzaSyBqo4pis087pDaxhTuXTnWRc9aysRxTs-U',
+    appId: '1:655120265431:android:321518e17674a1a7b40092',
+    messagingSenderId: '655120265431',
+    projectId: 'package-tracker-84222',
+    storageBucket: 'package-tracker-84222.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey:
-        'AIzaSyCcgnbh05AMhdJUSxS9VxUncQBW9bVX9o8', // Cập nhật dựa trên cấu hình Firebase
-    appId:
-        '1:912090799696:ios:7d550febcab7bb128fbb55', // Cập nhật dựa trên cấu hình Firebase
-    messagingSenderId: '912090799696',
-    projectId: 'mytracker-bde38',
-    storageBucket: 'mytracker-bde38.firebasestorage.app',
-    iosClientId:
-        '912090799696-6hpt8jhtputjmfq9dqoqccrmqhbsu0iq.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAf7GHGwbBPYNImrBgWDIB-iMU7N7OWEIQ',
+    appId: '1:655120265431:ios:3bcc25008dcf5c52b40092',
+    messagingSenderId: '655120265431',
+    projectId: 'package-tracker-84222',
+    storageBucket: 'package-tracker-84222.firebasestorage.app',
+    iosClientId: '655120265431-th7usoq1s7j177g5rpqjb859snt2vc52.apps.googleusercontent.com',
     iosBundleId: 'com.fau.mytracker',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey:
-        'AIzaSyCcgnbh05AMhdJUSxS9VxUncQBW9bVX9o8', // Cập nhật dựa trên cấu hình Firebase
-    appId:
-        '1:912090799696:ios:9f03a3fac5fc1b0e8fbb55', // Cập nhật dựa trên cấu hình Firebase
-    messagingSenderId: '912090799696',
-    projectId: 'mytracker-bde38',
-    storageBucket: 'mytracker-bde38.firebasestorage.app',
-    iosClientId:
-        '912090799696-hgb467v59k4afain8valbv0223cjr1fb.apps.googleusercontent.com', // Cập nhật dựa trên cấu hình Firebase
-    iosBundleId: 'com.fau.myTrackerApp', // Cập nhật dựa trên cấu hình Firebase
+    apiKey: 'AIzaSyAf7GHGwbBPYNImrBgWDIB-iMU7N7OWEIQ',
+    appId: '1:655120265431:ios:f949d651952d2a91b40092',
+    messagingSenderId: '655120265431',
+    projectId: 'package-tracker-84222',
+    storageBucket: 'package-tracker-84222.firebasestorage.app',
+    iosClientId: '655120265431-l6qfjbgg6mal1pq3dothrmt7m7tb4j5o.apps.googleusercontent.com',
+    iosBundleId: 'com.fau.myTrackerApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey:
-        'AIzaSyC_4MRySHztMVZCik4Oxh9ZD-nWIBgrgqA', // Cập nhật dựa trên cấu hình Firebase
-    appId:
-        '1:912090799696:web:4a8ecd3add560c3c8fbb55', // Cập nhật dựa trên cấu hình Firebase
-    messagingSenderId: '912090799696',
-    projectId: 'mytracker-bde38',
-    authDomain: 'mytracker-bde38.firebaseapp.com',
-    storageBucket: 'mytracker-bde38.firebasestorage.app',
-    measurementId: 'G-1YXFCFNEBE', // Cập nhật dựa trên cấu hình Firebase
+    apiKey: 'AIzaSyAdiuMHZFG4svnOZYMShHZBY4YdX8d7oQs',
+    appId: '1:655120265431:web:dabaccd090505998b40092',
+    messagingSenderId: '655120265431',
+    projectId: 'package-tracker-84222',
+    authDomain: 'package-tracker-84222.firebaseapp.com',
+    storageBucket: 'package-tracker-84222.firebasestorage.app',
+    measurementId: 'G-9K16CT8XM6',
   );
+
 }

@@ -21,8 +21,13 @@ abstract class TrackingEntity with _$TrackingEntity {
 
   factory TrackingEntity.fromJson(Map<String, dynamic> json) => _$TrackingEntityFromJson(json);
 
-  String? get latestStatus =>
-      tracking_info?['latest_status']?['status'] as String?;
+  // String? get latestStatus =>
+  //     tracking_info?['latest_status']?['status'] as String?;
+  String? get displayStatus {
+    final apiStatus = tracking_info?['track_info']?['latest_status']?['status'] as String?;
+    // Ưu tiên API status, nếu null thì mới lấy status từ DB
+    return apiStatus ?? status;
+  }
 }
 
 
