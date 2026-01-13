@@ -90,22 +90,38 @@ class _HomePageState extends State<HomePage> {
 
     if (categoryIndex == 0) return source; // All
 
-    if (categoryIndex == 1) {
-      final filtered = source.where((t) {
-        final n = _normalizeStatus(t.status);
-        return n.contains('transit') ||
-            n.contains('ship') ||
-            n.contains('intransit');
+    // if (categoryIndex == 1) {
+    //   final filtered = source.where((t) {
+    //     final n = _normalizeStatus(t.status);
+    //     return n.contains('transit') ||
+    //         n.contains('ship') ||
+    //         n.contains('intransit');
+    //   }).toList();
+    //   return filtered;
+    // }
+
+    // if (categoryIndex == 2) {
+    //   final filtered = source.where((t) {
+    //     final n = _normalizeStatus(t.status);
+    //     return n.contains('deliver');
+    //   }).toList();
+    //   return filtered;
+    // }
+
+    if (categoryIndex == 1) { // InTransit
+      return source.where((t) {
+        // Lấy status từ API lồng sâu, nếu null mới lấy t.status
+        final s = _normalizeStatus(t.tracking_info?['track_info']?['latest_status']?['status'] ?? t.status);
+        return s.contains('transit') || s.contains('ship');
       }).toList();
-      return filtered;
     }
 
-    if (categoryIndex == 2) {
-      final filtered = source.where((t) {
-        final n = _normalizeStatus(t.status);
-        return n.contains('deliver');
+    if (categoryIndex == 2) { // Delivered
+      return source.where((t) {
+        // Lấy status từ API lồng sâu, nếu null mới lấy t.status
+        final s = _normalizeStatus(t.tracking_info?['track_info']?['latest_status']?['status'] ?? t.status);
+        return s.contains('deliver');
       }).toList();
-      return filtered;
     }
 
     return source;
@@ -221,15 +237,26 @@ class _HomePageState extends State<HomePage> {
 
           // tính categories
           final allCount = trackings.length;
+          // final shippingCount = trackings.where((t) {
+          //   final n = _normalizeStatus(t.status);
+          //   return n.contains('transit') ||
+          //       n.contains('ship') ||
+          //       n.contains('intransit');
+          // }).length;
+          // final deliveredCount = trackings
+          //     .where((t) => _normalizeStatus(t.status).contains('deliver'))
+          //     .length;
+          // Tính số lượng InTransit
           final shippingCount = trackings.where((t) {
-            final n = _normalizeStatus(t.status);
-            return n.contains('transit') ||
-                n.contains('ship') ||
-                n.contains('intransit');
+            final s = _normalizeStatus(t.tracking_info?['track_info']?['latest_status']?['status'] ?? t.status);
+            return s.contains('transit') || s.contains('ship');
           }).length;
-          final deliveredCount = trackings
-              .where((t) => _normalizeStatus(t.status).contains('deliver'))
-              .length;
+
+          // Tính số lượng Delivered
+          final deliveredCount = trackings.where((t) {
+            final s = _normalizeStatus(t.tracking_info?['track_info']?['latest_status']?['status'] ?? t.status);
+            return s.contains('deliver');
+          }).length;
 
           final categories = [
             CategoryInfo(
@@ -290,18 +317,18 @@ class _HomePageState extends State<HomePage> {
 
                             return CurrentShipment(
                                 lastestTracking: lastestTracking,
-                                onTap: (){
+                                onTap: () {
                                   if (lastestTracking != null) {
+                                    // Lấy status mới nhất từ API để đè lên status cũ của DB
+                                    final actualStatus = lastestTracking.tracking_info?['track_info']?['latest_status']?['status'] ?? lastestTracking.status;
+
                                     final Map<String, dynamic> rawData = {
-                                      ...lastestTracking!.toJson(),
-                                      'tracking_info': lastestTracking!.tracking_info, // Ép dữ liệu vào đây
+                                      ...lastestTracking.toJson(),
+                                      'status': actualStatus, // status mới nhất
+                                      'tracking_info': lastestTracking.tracking_info,
                                     };
-                                    final detailEntity = TrackingDetailEntity(
-                                      rawData: rawData,
-                                    );
-                                    context.router.push(
-                                      TrackingDetailRoute(detail: detailEntity),
-                                    );
+                                    
+                                    context.router.push(TrackingDetailRoute(detail: TrackingDetailEntity(rawData: rawData)));
                                   }
                                 },
                               );

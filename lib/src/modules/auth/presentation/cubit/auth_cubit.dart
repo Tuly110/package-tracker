@@ -154,6 +154,17 @@ class AuthCubit extends Cubit<AuthState> {
       (user) async {
         emit(AuthState.authenticated(user.id));
         emit(AuthState.userInfoLoaded(user));
+
+        final tokenDevice = await FirebaseMessaging.instance.getToken();
+        if(tokenDevice != null){
+          await _updateUserUsecase(
+            user.id,
+            tokenDevice,
+            user.username,
+            user.email,
+          );
+          print('Device token updated successfully after Email-password sign-in');
+        }
         
       },
     );

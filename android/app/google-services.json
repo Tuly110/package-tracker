@@ -1,93 +1,34 @@
 {
   "project_info": {
-    "project_number": "912090799696",
-    "project_id": "mytracker-bde38",
-    "storage_bucket": "mytracker-bde38.firebasestorage.app"
+    "project_number": "655120265431",
+    "project_id": "package-tracker-84222",
+    "storage_bucket": "package-tracker-84222.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:912090799696:android:631bee804f495a8e8fbb55",
+        "mobilesdk_app_id": "1:655120265431:android:321518e17674a1a7b40092",
         "android_client_info": {
           "package_name": "com.fau.my_tracker_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "912090799696-0k33ug9dgn7bnrk78lhhvu50nchs8vmd.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fau.my_tracker_app",
-            "certificate_hash": "0c31b123796af652e6227640cc8b579bd3f49b87"
-          }
-        },
-        {
-          "client_id": "912090799696-ti9h0ibnkdimv4no568qetrkcpk6naa5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fau.my_tracker_app",
-            "certificate_hash": "3534b9ecf6e7add6416885524ab30eab4e24404e"
-          }
-        },
-        {
-          "client_id": "912090799696-o63a4dqk9q48e7n1p2cjv1vbu1vreo7d.apps.googleusercontent.com",
+          "client_id": "655120265431-oh4shloo84vmvf6ogfthh3kf73ssg3tn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAj6blsfvr8WlRUc02anR4uM5YKGYv0GRg"
+          "current_key": "AIzaSyBqo4pis087pDaxhTuXTnWRc9aysRxTs-U"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "912090799696-o63a4dqk9q48e7n1p2cjv1vbu1vreo7d.apps.googleusercontent.com",
+              "client_id": "655120265431-oh4shloo84vmvf6ogfthh3kf73ssg3tn.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "912090799696-6hpt8jhtputjmfq9dqoqccrmqhbsu0iq.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.fau.mytracker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:912090799696:android:4de3f6369fd1346c8fbb55",
-        "android_client_info": {
-          "package_name": "com.fau.mytracker"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "912090799696-o63a4dqk9q48e7n1p2cjv1vbu1vreo7d.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAj6blsfvr8WlRUc02anR4uM5YKGYv0GRg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "912090799696-o63a4dqk9q48e7n1p2cjv1vbu1vreo7d.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "912090799696-6hpt8jhtputjmfq9dqoqccrmqhbsu0iq.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.fau.mytracker"
-              }
             }
           ]
         }

@@ -6,7 +6,6 @@ import 'package:my_tracker_app/src/modules/notify/presentation/cubit/notify_cubi
 import 'package:my_tracker_app/src/modules/notify/presentation/cubit/notify_state.dart';
 
 import '../../../../generated/colors.gen.dart';
-import '../../../common/utils/getit_utils.dart';
 
 @RoutePage()
 class NotificationPage extends StatelessWidget {
@@ -14,9 +13,7 @@ class NotificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<NotifyCubit>(),
-      child: BlocBuilder<NotifyCubit, NotifyState>(
+    return BlocBuilder<NotifyCubit, NotifyState>(
         builder: (context, state) {
           final cubit = context.read<NotifyCubit>();
           return Scaffold(
@@ -88,6 +85,11 @@ class NotificationPage extends StatelessWidget {
                                       isRead ? ColorName.gray : ColorName.black,
                                 ),
                               ),
+                              onTap: () {
+                                if(notify.status != 'read'){
+                                  cubit.markAsRead(notify.id.toString());
+                                }
+                              },
                               // Ẩn subtitle chứa status text
                               // subtitle: Text(notify.status ?? ''),
                               trailing: PopupMenuButton<String>(
@@ -128,8 +130,7 @@ class NotificationPage extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
+      );
   }
 
   Widget _buildHeader(BuildContext context, NotifyState state) {
